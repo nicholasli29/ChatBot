@@ -13,6 +13,131 @@ body {
   background-color: #f7f7f7;
 }
 
+.botSelectContainer {
+  display: flex;
+  margin: 50px auto;
+  justify-content: center;
+  width: 500px;
+  gap: 60px;
+}
+
+.botSelector {
+  padding: 15px 32px;
+}
+
+/* Bread icon css */
+.breadIcon {
+  background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.breadHat {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  background: #fff;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 50% 50% 0 0;
+  border-bottom: none;
+  box-shadow: 2px -4px #c68958;
+}
+
+.breadHat:before,
+.breadHat:after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  background: inherit;
+  border-width: 4px;
+  border-style: solid;
+}
+
+.breadHat:before {
+  left: 80%;
+  width: 80%;
+  height: 80%;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 3px -4px #c68958;
+}
+
+.breadHat:after {
+  right: 80%;
+  width: 80%;
+  height: 80%;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 50% 50% 0;
+  box-shadow: 0px -4px #c68958;
+}
+
+.breadEye {
+  height: 12px;
+  width: 12px;
+  background-color: black;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+}
+
+.breadLeftEye {
+  left: 0;
+}
+
+.breadRightEye {
+  right: 0;
+}
+
+.breadBody {
+  height: 50px;
+  width: 80px;
+  margin: auto;
+  border-width: 4px;
+  border-style: solid;
+  border-radius: 0 0 15% 15%;
+  border-top: none;
+  background: #fff;
+  box-shadow: 3px -4px #c68958;
+  position: relative;
+  z-index: -1;
+}
+
+.breadSmile {
+  position: absolute;
+  display: inline-block;
+  top: 20%;
+  left: 30%;
+  width: 40%;
+  height: 13px;
+  border-radius: 7px 7px 100px 100px;
+  background-color: black;
+}
+
+.frogIcon {
+  background-image: url('../assets/picklesIcon.png');
+  background-repeat:no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-color: inherit;
+  border: none;
+  width: 80px;
+  height: 100px;
+  padding-top: 100px;
+  font: inherit;
+  cursor: pointer;
+}
+
 .chatBot {
   border: 3px solid #2F8D46;
   border-radius: 10px;
@@ -62,10 +187,14 @@ header h2 {
   background-color: #162887;
   align-self: flex-end;
   color: #fff;
+  text-align: right;
+  margin-left: auto;
+  width: fit-content;
 }
 
 .chat-incoming p {
   background-color: #eaeaea;
+  width: fit-content;
 }
 
 .chat-input {

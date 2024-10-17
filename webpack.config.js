@@ -10,7 +10,8 @@ export default (env) => {
     plugins: [
       new HtmlWebpackPlugin({
         title: 'ChatBot',
-        template: 'src/assets/index.html'
+        template: 'src/assets/index.html',
+        cache: false
       }),
       new webpack.DefinePlugin({
         'API_KEY': JSON.stringify(env.API_KEY),
@@ -30,6 +31,10 @@ export default (env) => {
           test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
         },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif)$/i,
+          type: 'asset/resource',
+        }
       ],
     },
     resolve: {

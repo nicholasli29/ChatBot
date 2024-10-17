@@ -12,7 +12,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js --mode production",
     "start": "webpack serve --open --mode production",
-    "deploy": "gh-pages -d dist"
+    "deploy": "webpack --config webpack.config.js --mode production && gh-pages -d dist"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0"
