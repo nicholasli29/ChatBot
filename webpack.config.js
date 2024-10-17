@@ -15,7 +15,8 @@ export default (env) => {
       }),
       new webpack.DefinePlugin({
         'API_KEY': JSON.stringify(env.API_KEY),
-        'PROMPT': JSON.stringify(env.PROMPT)
+        'PING_PROMPT': JSON.stringify(env.PING_PROMPT),
+        'FROD_PROMPT': JSON.stringify(env.FROD_PROMPT)
       })
     ],
     output: {

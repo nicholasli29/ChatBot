@@ -1,29 +1,61 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import './css/style.css';
 
+const PingBot = {
+    chatBoxName: "PingBot",
+    prompt: PING_PROMPT,
+    initialText: "DOOMED"
+}
+
+const FrodBot = {
+    chatBoxName: "FrodBot",
+    prompt: FROD_PROMPT,
+    initialText: "HAI WA"
+}
+
+const keysPressed = {};
+
 const chatInput = 
     document.querySelector('.chat-input textarea');
 const sendChatBtn = 
     document.querySelector('.chat-input button');
+const pingBotBtn = 
+    document.querySelector('.breadIcon');
+const frodBotBtn = 
+    document.querySelector('.frogIcon');
 const chatbox = document.querySelector(".chatbox");
 
 let userMessage;
+let chat;
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const chat = model.startChat({
-    history: [
-      {
-        role: "user",
-        parts: [{ text: PROMPT }],
-      },
-      {
-        role: "model",
-        parts: [{ text: "Great to meet you. What would you like to know?" }],
-      },
-    ],
-  });
+const startChat = (prompt) => {
+    chat = model.startChat({
+        history: [
+        {
+            role: "user",
+            parts: [{ text: prompt }],
+        },
+        {
+            role: "model",
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
+        },
+        ],
+    });
+}
+
+const initializeChatBot = (botClass) => {
+    setEnterChat();
+
+    startChat(botClass.prompt);
+    const chatBoxName = document.querySelector('.chatBoxName');
+    chatBoxName.innerHTML = botClass.chatBoxName;
+    const initialText = document.querySelector('.initialText');
+    initialText.innerHTML = botClass.initialText;
+}
+
 
 const createChatLi = (message, className) => {
     const chatLi = document.createElement("li");
@@ -67,19 +99,43 @@ const handleChatAsync = async () => {
 
     new Promise(resolve => setTimeout(resolve, 600));
     await generateResponseAsync(incomingChatLi);
+
+    setTimeout(() => {
+        document.getElementById("chatInput").value = "";
+      }, "20");
+}
+
+const setEnterChat = () => {
+    document.addEventListener('keydown', async (event) => {
+        if (!event.repeat) {
+            keysPressed[event.key] = true;
+        }
+
+        switch (true) {
+          case event.key === 'Shift' && keysPressed['Enter']:
+          case event.key === 'Enter' && keysPressed['Shift']:
+            return;
+          default:
+            break;
+        }
+
+        if (event.repeat) {
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            await handleChatAsync();
+        }
+
+    });
+      
+    document.addEventListener('keyup', (event) => {
+        if (!event.repeat) {
+            delete keysPressed[event.key];
+        }
+    });
 }
 
 sendChatBtn.addEventListener("click", () => handleChatAsync());
-
-function cancel() {
-    let chatbotcomplete = document.querySelector(".chatBot");
-    if (chatbotcomplete.style.display != 'none') {
-        chatbotcomplete.style.display = "none";
-        let lastMsg = document.createElement("p");
-        lastMsg.textContent = 'DOOMED!';
-        lastMsg.classList.add('lastMessage');
-        document.body.appendChild(lastMsg)
-    }
-}
-
-window.cancel = cancel;
+pingBotBtn.addEventListener("click", () => initializeChatBot(PingBot));
+frodBotBtn.addEventListener("click", () => initializeChatBot(FrodBot));

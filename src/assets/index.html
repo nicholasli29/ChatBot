@@ -24,18 +24,15 @@
     </div>
     <div class="chatBot">
         <header>
-            <h2>ChatBot</h2>
-            <span alt="Close" 
-                  id="cross" 
-                  onclick="cancel()">X</span>
+            <h2 class="chatBoxName"></h2>
         </header>
         <ul class="chatbox">
             <li class="chat-incoming chat">
-                <p>DOOMED</p>
+                <p class="initialText"></p>
             </li>
         </ul>
         <div class="chat-input">
-            <textarea rows="0" cols="17"
+            <textarea id="chatInput" rows="0" cols="17"
                       placeholder="Enter a message..."></textarea>
             <button id="sendBTN">Send</button>
         </div>

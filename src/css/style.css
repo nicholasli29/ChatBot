@@ -261,3 +261,7 @@ header h2 {
   color: darkgreen;
   margin-left: 550px;
 }
+
+.hidden {
+  display: none;
+}
