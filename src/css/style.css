@@ -144,7 +144,6 @@ body {
 }
 
 .chatBot {
-  border: 3px solid #2F8D46;
   border-radius: 10px;
   margin: auto;
   overflow: hidden;
@@ -158,11 +157,27 @@ body {
   background-position: center;
 }
 
+.pingChat {
+  border: 3px solid #c68958;
+}
+
+.frodChat {
+  border: 3px solid #bdd578;
+}
+
 header {
   background-color: #2F8D46;
   text-align: center;
   padding: 10px 0;
   border-radius: 7px 7px 0 0;
+}
+
+.pingHeader {
+  background: #c68958;
+}
+
+.frodHeader {
+  background: #bdd578;
 }
 
 header h2 {
@@ -253,7 +268,6 @@ header h2 {
   font-size: 20px;
   font-weight: 600;
   border-radius: 7px;
-  background-color: #2F8D46;
   cursor: pointer;
   color: white;
   margin-top: 12px;

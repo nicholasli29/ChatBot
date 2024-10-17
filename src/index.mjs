@@ -4,26 +4,33 @@ import './css/style.css';
 const PingBot = {
     chatBoxName: "PingBot",
     prompt: PING_PROMPT,
-    initialText: "DOOMED"
+    initialText: "DOOMED",
+    chatId: "pingChat",
+    headerId: "pingHeader"
 }
 
 const FrodBot = {
     chatBoxName: "FrodBot",
     prompt: FROD_PROMPT,
-    initialText: "HAI WA"
+    initialText: "HAI WA",
+    chatId: "frodChat",
+    headerId: "frodHeader"
 }
+
+const botList = [PingBot, FrodBot];
 
 const keysPressed = {};
 
-const chatInput = 
-    document.querySelector('.chat-input textarea');
-const sendChatBtn = 
-    document.querySelector('.chat-input button');
-const pingBotBtn = 
-    document.querySelector('.breadIcon');
-const frodBotBtn = 
-    document.querySelector('.frogIcon');
+const chatInput = document.querySelector('.chat-input textarea');
+const sendChatBtn = document.querySelector('.chat-input button');
+const pingBotBtn = document.querySelector('.breadIcon');
+const frodBotBtn = document.querySelector('.frogIcon');
 const chatbox = document.querySelector(".chatbox");
+const chatBoxName = document.querySelector('.chatBoxName');
+const chatBoxHeader = document.querySelector('.chatBoxHeader');
+const initialText = document.querySelector('.initialText');
+const chatBot = document.querySelector('.chatBot');
+const sendBTN = document.getElementById('sendBTN');
 
 let userMessage;
 let chat;
@@ -65,13 +72,23 @@ const startChat = (prompt) => {
 }
 
 const initializeChatBot = (botClass) => {
-    setEnterChat();
+    clearPreviousChatBot();
 
     startChat(botClass.prompt);
-    const chatBoxName = document.querySelector('.chatBoxName');
     chatBoxName.innerHTML = botClass.chatBoxName;
-    const initialText = document.querySelector('.initialText');
     initialText.innerHTML = botClass.initialText;
+    chatBot.classList.remove('hidden');
+    chatBot.classList.add(botClass.chatId);
+    chatBoxHeader.classList.add(botClass.headerId);
+    sendBTN.classList.add(botClass.headerId);
+}
+
+const clearPreviousChatBot = () => {
+    botList.forEach(function(bot) {
+        chatBot.classList.remove(bot.chatId);
+        chatBoxHeader.classList.remove(bot.headerId);
+        sendBTN.classList.remove(bot.headerId);
+    });
 }
 
 
@@ -157,3 +174,4 @@ const setEnterChat = () => {
 sendChatBtn.addEventListener("click", () => handleChatAsync());
 pingBotBtn.addEventListener("click", () => initializeChatBot(PingBot));
 frodBotBtn.addEventListener("click", () => initializeChatBot(FrodBot));
+setEnterChat();
