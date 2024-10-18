@@ -21,19 +21,22 @@ const botList = [PingBot, FrodBot];
 
 const keysPressed = {};
 
-const chatInput = document.querySelector('.chat-input textarea');
-const sendChatBtn = document.querySelector('.chat-input button');
 const pingBotBtn = document.querySelector('.breadIcon');
 const frodBotBtn = document.querySelector('.frogIcon');
-const chatbox = document.querySelector(".chatbox");
-const chatBoxName = document.querySelector('.chatBoxName');
-const chatBoxHeader = document.querySelector('.chatBoxHeader');
-const initialText = document.querySelector('.initialText');
-const chatBot = document.querySelector('.chatBot');
-const sendBTN = document.getElementById('sendBTN');
+
+let chatIdElement;
+let chatBotChats;
+let chatBotHeaders;
+let chatBotNames;
+let initialTexts;
+let sendBTNs;
+
+let chatInput;
+let chatBox;
 
 let userMessage;
-let chat;
+let activeBot;
+let initializedEnterKey = false;
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 const safetySettings = [
@@ -56,12 +59,12 @@ const safetySettings = [
 ];
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", safetySettings: safetySettings });
 
-const startChat = (prompt) => {
-    chat = model.startChat({
+const startChat = (botClass) => {
+    botClass.chat = model.startChat({
         history: [
         {
             role: "user",
-            parts: [{ text: prompt }],
+            parts: [{ text: botClass.prompt }],
         },
         {
             role: "model",
@@ -69,28 +72,49 @@ const startChat = (prompt) => {
         },
         ],
     });
-}
+};
 
-const initializeChatBot = (botClass) => {
-    clearPreviousChatBot();
+const initializeChatBots = () => {
+    let chatBot = document.querySelector('.chatBot');
+    for (let i = 0; i < botList.length - 1; i++) {
+        let clone = chatBot.cloneNode(true);
+        document.body.appendChild(clone);
+    }
 
-    startChat(botClass.prompt);
-    chatBoxName.innerHTML = botClass.chatBoxName;
-    initialText.innerHTML = botClass.initialText;
-    chatBot.classList.remove('hidden');
-    chatBot.classList.add(botClass.chatId);
-    chatBoxHeader.classList.add(botClass.headerId);
-    sendBTN.classList.add(botClass.headerId);
-}
+    chatBotChats = document.querySelectorAll('.chatBot');
+    chatBotHeaders = document.querySelectorAll('.chatBoxHeader');
+    chatBotNames = document.querySelectorAll('.chatBoxName');
+    initialTexts = document.querySelectorAll('.initialText');
+    sendBTNs = document.querySelectorAll('.sendBTN');
+    for (let j = 0; j < botList.length; j++) {
+        let bot = botList[j];
+        startChat(bot);
+        chatBotChats.item(j).classList.add(bot.chatId);
+        chatBotHeaders.item(j).classList.add(bot.headerId);
+        chatBotNames.item(j).innerHTML = bot.chatBoxName;
+        initialTexts.item(j).innerHTML = bot.initialText;
+        sendBTNs.item(j).classList.add(bot.headerId);
+        sendBTNs.item(j).addEventListener("click", () => handleChatAsync());
+    }
+};
 
-const clearPreviousChatBot = () => {
-    botList.forEach(function(bot) {
-        chatBot.classList.remove(bot.chatId);
-        chatBoxHeader.classList.remove(bot.headerId);
-        sendBTN.classList.remove(bot.headerId);
+const switchChatBot = (botClass) => {
+    activeBot = botClass;
+
+    chatIdElement = document.querySelector(`.${botClass.chatId}`);
+    chatBox = chatIdElement.querySelector('.chatbox');
+    chatInput = chatIdElement.querySelector('.chat-input textarea');
+
+    chatBotChats.forEach(function(chatBotChat) {
+        chatBotChat.classList.add('hidden');
     });
-}
+    chatIdElement.classList.remove('hidden');
 
+    if (!initializedEnterKey) {
+        initializedEnterKey = true;
+        setEnterChat();
+    }
+}
 
 const createChatLi = (message, className) => {
     const chatLi = document.createElement("li");
@@ -99,7 +123,7 @@ const createChatLi = (message, className) => {
         className === "chat-outgoing" ? `<p>${message}</p>` : `<p>${message}</p>`;
     chatLi.innerHTML = chatContent;
     return chatLi;
-}
+};
 
 const generateResponseAsync = async (incomingChatLi) => {
     const messageElement = incomingChatLi
@@ -107,7 +131,7 @@ const generateResponseAsync = async (incomingChatLi) => {
 
     let response;
     try {
-        response = (await chat.sendMessage(userMessage)).response.text();
+        response = (await activeBot.chat.sendMessage(userMessage)).response.text();
     } catch (e) {
         response = e.toString();
     }
@@ -121,24 +145,24 @@ const handleChatAsync = async () => {
     if (!userMessage) {
         return;
     }
-    chatbox
+    chatBox
     .appendChild(createChatLi(userMessage, "chat-outgoing"));
-    chatbox
-    .scrollTo(0, chatbox.scrollHeight);
+    chatBox
+    .scrollTo(0, chatBox.scrollHeight);
 
     const incomingChatLi = createChatLi("Thinking...", "chat-incoming");
     setTimeout(() => {
-        chatbox.appendChild(incomingChatLi);
-        chatbox.scrollTo(0, chatbox.scrollHeight);
+        chatBox.appendChild(incomingChatLi);
+        chatBox.scrollTo(0, chatBox.scrollHeight);
     }, 600);
 
     new Promise(resolve => setTimeout(resolve, 600));
     await generateResponseAsync(incomingChatLi);
 
     setTimeout(() => {
-        document.getElementById("chatInput").value = "";
+        chatInput.value = "";
       }, "20");
-}
+};
 
 const setEnterChat = () => {
     document.addEventListener('keydown', async (event) => {
@@ -171,7 +195,6 @@ const setEnterChat = () => {
     });
 }
 
-sendChatBtn.addEventListener("click", () => handleChatAsync());
-pingBotBtn.addEventListener("click", () => initializeChatBot(PingBot));
-frodBotBtn.addEventListener("click", () => initializeChatBot(FrodBot));
-setEnterChat();
+pingBotBtn.addEventListener("click", () => switchChatBot(PingBot));
+frodBotBtn.addEventListener("click", () => switchChatBot(FrodBot));
+initializeChatBots();

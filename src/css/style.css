@@ -223,10 +223,9 @@ header h2 {
 }
 
 .chat-input textarea {
-  width: 522px;
+  width: 510px;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 7px;
   resize: none;
   outline: none;
   overflow-y: scroll;
@@ -260,7 +259,7 @@ header h2 {
   background-color: #ff3737e8;
 }
 
-#sendBTN {
+.sendBTN {
   width: 100%;
   padding: 8px;
   border: 0;
